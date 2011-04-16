@@ -30,13 +30,20 @@ class Graph
   end
   
   def color_vertex(id, color)
-    #vertex(id).color(color)
+    @adj_list[id].color = color
+  end
+
+  def get_vertex_color(id)
+    @adj_list[id].color
   end
   
 end
 
 class Vertex
   attr_accessor :id
+  attr_accessor :color
+  attr_accessor :distance
+  attr_accessor :predecessor
   
   def initialize(id)
     @id = id

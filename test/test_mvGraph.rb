@@ -98,6 +98,7 @@ class TestGraph < MiniTest::Unit::TestCase
   def test_vertex_color
     @graph.add_vertex(Vertex.new(1))
     @graph.color_vertex(1,"white")
+    assert_equals @graph.get_vertex_color(1), "white"
   end
   
 end
