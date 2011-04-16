@@ -27,39 +27,44 @@ class TestGraph < MiniTest::Unit::TestCase
   
   def test_add_vertex
     @graph.add_vertex(Vertex.new(1))
-    assert @graph.vertex(1)
+    assert @graph.vertex(Vertex.new(1))
   end
   
   def test_add_edge
-    @graph.add_vertex(Vertex.new(1))
+    vertex1 = Vertex.new(1)
+    @graph.add_vertex(vertex1)
     @graph.add_vertex(Vertex.new(2))
-    @graph.add_edge(1,2)
-    assert @graph.has_edge?(1,2)
+    @graph.add_edge(vertex1, Vertex.new(2))
+    assert @graph.has_edge?(Vertex.new(1),Vertex.new(2))
   end
   
   def test_no_edge
-    refute @graph.has_edge?(3,4)
+    refute @graph.has_edge?(Vertex.new(3),Vertex.new(4))
   end
   
   def test_add_multiple_vertices_and_edges
     @graph.add_vertex(Vertex.new(1))
     @graph.add_vertex(Vertex.new(2))
-    @graph.add_edge(2,1)
+    @graph.add_edge(Vertex.new(2),Vertex.new(1))
     @graph.add_vertex(Vertex.new(3))
     @graph.add_vertex(Vertex.new(4))
-    @graph.add_edge(3,4)
-    @graph.add_edge(1,4)
-    @graph.add_edge(3,2)
-    assert @graph.has_edge?(1,2)
-    assert @graph.has_edge?(3,4)
-    assert @graph.has_edge?(4,1)
-    assert @graph.has_edge?(3,2)
+    @graph.add_edge(Vertex.new(3),Vertex.new(4))
+    @graph.add_edge(Vertex.new(1),Vertex.new(4))
+    @graph.add_edge(Vertex.new(3),Vertex.new(2))
+    assert @graph.has_edge?(Vertex.new(1),Vertex.new(2))
+    assert @graph.has_edge?(Vertex.new(3),Vertex.new(4))
+    assert @graph.has_edge?(Vertex.new(4),Vertex.new(1))
+    assert @graph.has_edge?(Vertex.new(3),Vertex.new(2))
   end
   
   def test_loop
     @graph.add_vertex(Vertex.new(1))
-    @graph.add_edge(1,1)
-    assert @graph.has_edge?(1,1)
+    @graph.add_edge(Vertex.new(1),Vertex.new(1))
+    assert @graph.has_edge?(Vertex.new(1),Vertex.new(1))
+  end
+  
+  def test_vertex_equal
+    assert Vertex.new(1).eql? Vertex.new(1)
   end
   
   def bfs_setup
@@ -75,30 +80,44 @@ class TestGraph < MiniTest::Unit::TestCase
     @bfs_graph.add_vertex(Vertex.new(9))
     @bfs_graph.add_vertex(Vertex.new(10))
     @bfs_graph.add_vertex(Vertex.new(11))
-    @bfs_graph.add_edge(1,2)
-    @bfs_graph.add_edge(1,3)
-    @bfs_graph.add_edge(1,4)
-    @bfs_graph.add_edge(2,5)
-    @bfs_graph.add_edge(5,6)
-    @bfs_graph.add_edge(7,8)
-    @bfs_graph.add_edge(6,7)
-    @bfs_graph.add_edge(11,8)
-    @bfs_graph.add_edge(9,11)
-    @bfs_graph.add_edge(9,10)
-    @bfs_graph.add_edge(10,5)
+    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(2))
+    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(3))
+    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(4))
+    @bfs_graph.add_edge(Vertex.new(2),Vertex.new(5))
+    @bfs_graph.add_edge(Vertex.new(5),Vertex.new(6))
+    @bfs_graph.add_edge(Vertex.new(7),Vertex.new(8))
+    @bfs_graph.add_edge(Vertex.new(6),Vertex.new(7))
+    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(1))
+    @bfs_graph.add_edge(Vertex.new(9),Vertex.new(1))
+    @bfs_graph.add_edge(Vertex.new(9),Vertex.new(1))
+    @bfs_graph.add_edge(Vertex.new(10),Vertex.new(5))
   end
   
   def test_bfs
     bfs_setup
     assert @bfs_graph
-    bfs_search @bfs_graph
-    assert_equals @bfs_graph.vertex(1).d, 0
+    @bfs_graph.bfs(Vertex.new(1))
+    assert_equal @bfs_graph.get_vertex_color(Vertex.new(1)), "white"
+    assert_equal @bfs_graph.get_vertex_distance(Vertex.new(2)), 2**32
+    assert_equal @bfs_graph.get_vertex_predecessor(Vertex.new(2)), Vertex.new(1)
   end
   
   def test_vertex_color
     @graph.add_vertex(Vertex.new(1))
-    @graph.color_vertex(1,"white")
-    assert_equals @graph.get_vertex_color(1), "white"
+    @graph.set_vertex_color(Vertex.new(1),"white")
+    assert_equal @graph.get_vertex_color(Vertex.new(1)), "white"
+  end
+  
+  def test_vertex_distance
+    @graph.add_vertex(Vertex.new(1))
+    @graph.set_vertex_distance(Vertex.new(1), 0)
+    assert_equal @graph.get_vertex_distance(Vertex.new(1)), 0
+  end
+  
+  def test_vertex_predecessor
+    @graph.add_vertex(Vertex.new(1))
+    @graph.set_vertex_predecessor(Vertex.new(1), nil)
+    assert_equal @graph.get_vertex_predecessor(Vertex.new(1)), nil
   end
   
 end
