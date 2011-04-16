@@ -1,11 +1,11 @@
 require 'minitest/autorun'
-require_relative 'djgraph.rb'
+require_relative 'mvGraph.rb'
 
 class TestGraph < MiniTest::Unit::TestCase
   def setup
-    @graph = DJGraph.new
-    @vertex = DJVertex.new(1)
-    @edge = DJEdge.new
+    @graph = Graph.new
+    @vertex = Vertex.new(1)
+    @edge = Edge.new
   end
 
   def test_create_graph
@@ -26,13 +26,13 @@ class TestGraph < MiniTest::Unit::TestCase
   end
   
   def test_add_vertex
-    @graph.add_vertex(DJVertex.new(1))
+    @graph.add_vertex(Vertex.new(1))
     assert @graph.vertex(1)
   end
   
   def test_add_edge
-    @graph.add_vertex(DJVertex.new(1))
-    @graph.add_vertex(DJVertex.new(2))
+    @graph.add_vertex(Vertex.new(1))
+    @graph.add_vertex(Vertex.new(2))
     @graph.add_edge(1,2)
     assert @graph.edge?(1,2)
   end
