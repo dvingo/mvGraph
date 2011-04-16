@@ -17,11 +17,22 @@ class Graph
     @adj_list[v2] << v1
   end
   
-  def edge?(v1, v2)
+  def has_edge?(v1, v2)
     unless @adj_list[v1].nil? and @adj_list[v2].nil?
       @adj_list[v1].include? v2 and @adj_list[v2].include? v1
     end
   end
+  
+  def bfs_search(start_vertex)
+    @adj_list.each do |vertex|
+        
+    end
+  end
+  
+  def color_vertex(id, color)
+    #vertex(id).color(color)
+  end
+  
 end
 
 class Vertex

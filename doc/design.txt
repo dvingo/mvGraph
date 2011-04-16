@@ -1,0 +1,26 @@
+==============
+ New Features
+==============
+-Graph Visualization
+  -Output
+    -ASCII
+    -JSON
+    -OpenGL/WebGL
+    -Static image (png, jpeg, etc.)
+-Graph Methods
+  -Search
+    -Breadth-first
+    -Depth-first
+      -Iterative Depth-first
+    -Best-first
+    -Greedy
+    -A*
+-Database
+-Sub/Supertypes
+  -Simple
+  -Directed
+  -Weighted-edges
+  -Hypergraph
+  -Toy implementations
+    -Slide puzzle
+    -Chess/checkers
