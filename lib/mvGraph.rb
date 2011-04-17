@@ -1,4 +1,11 @@
 class Graph
+  include Enumerable
+  
+  def each
+    @adj_list.keys.each do |vertex|
+      yield vertex
+    end
+  end
   
   def initialize
     @adj_list = Hash.new
@@ -24,32 +31,54 @@ class Graph
   end
   
   def bfs(start_vertex)
-    @adj_list.keys.each do |vertex|
+    set_vertex_color(start_vertex, "gray")
+    set_vertex_distance(start_vertex, 0)
+    queue = @adj_list[start_vertex]
+    last_neighbor = get_graph_vertex(start_vertex)
+    while queue.length != 0
+      queue.each do |neighbor|
+        if get_vertex_color(get_graph_vertex(neighbor)) != "black"
+          set_vertex_color(get_graph_vertex(neighbor), "gray")
+          set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(last_neighbor)) + 1)
+          set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(last_neighbor))
+        end
+      end
+      @adj_list[queue.first].each do |neighbor|
+        queue << get_graph_vertex(neighbor) if get_vertex_color(neighbor) == "white"
+      end
+      set_vertex_color(get_graph_vertex(last_neighbor), "black")
+      last_neighbor = get_graph_vertex(queue.first)
+      queue.delete(get_graph_vertex(queue.first)) if get_vertex_color(get_graph_vertex(queue.first)) == "black"
     end
   end
   
   def set_vertex_color(v, color)
-    @adj_list.keys[@adj_list.keys.index(v)].color = color
+    get_graph_vertex(v).color = color
   end
 
   def get_vertex_color(v)
-    @adj_list.keys[@adj_list.keys.index(v)].color
+    get_graph_vertex(v).color
   end
   
   def set_vertex_distance(v, distance)
-    @adj_list.keys[@adj_list.keys.index(v)].distance = distance
+    get_graph_vertex(v).distance = distance
   end
 
   def get_vertex_distance(v)
-    @adj_list.keys[@adj_list.keys.index(v)].distance
+    get_graph_vertex(v).distance
   end
   
   def set_vertex_predecessor(v, predecessor)
-    @adj_list.keys[@adj_list.keys.index(v)].predecessor = predecessor
+    get_graph_vertex(v).predecessor = predecessor
   end
 
   def get_vertex_predecessor(v)
-    @adj_list.keys[@adj_list.keys.index(v)].predecessor
+    get_graph_vertex(v).predecessor
+  end
+  
+  private
+  def get_graph_vertex(v)
+    @adj_list.keys[@adj_list.keys.index(v)]
   end
   
 end

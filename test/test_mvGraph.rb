@@ -67,7 +67,7 @@ class TestGraph < MiniTest::Unit::TestCase
     assert Vertex.new(1).eql? Vertex.new(1)
   end
   
-  def bfs_setup
+  def bfs_setup_hard
     @bfs_graph = Graph.new
     @bfs_graph.add_vertex(Vertex.new(1))
     @bfs_graph.add_vertex(Vertex.new(2))
@@ -93,13 +93,36 @@ class TestGraph < MiniTest::Unit::TestCase
     @bfs_graph.add_edge(Vertex.new(10),Vertex.new(5))
   end
   
+  def bfs_setup_easy
+    @bfs_graph = Graph.new
+    @bfs_graph.add_vertex(Vertex.new(1))
+    @bfs_graph.add_vertex(Vertex.new(2))
+    @bfs_graph.add_vertex(Vertex.new(3))
+    @bfs_graph.add_vertex(Vertex.new(4))
+    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(2))
+    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(3))
+    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(4))
+  end
+  
   def test_bfs
-    bfs_setup
+    bfs_setup_easy
     assert @bfs_graph
     @bfs_graph.bfs(Vertex.new(1))
-    assert_equal @bfs_graph.get_vertex_color(Vertex.new(1)), "white"
-    assert_equal @bfs_graph.get_vertex_distance(Vertex.new(2)), 2**32
-    assert_equal @bfs_graph.get_vertex_predecessor(Vertex.new(2)), Vertex.new(1)
+    assert_equal "black", @bfs_graph.get_vertex_color(Vertex.new(1))
+    assert_equal 0, @bfs_graph.get_vertex_distance(Vertex.new(1))
+    assert_equal nil, @bfs_graph.get_vertex_predecessor(Vertex.new(1))
+    
+    @bfs_graph.each {|vertex| p vertex}
+    
+    #assert_equal @bfs_graph.get_vertex_color(Vertex.new(11)), "black"
+    #assert @bfs_graph.get_vertex_distance(Vertex.new(11)) == 6 or @bfs_graph.get_vertex_distance(Vertex.new(11)) == 5
+    #assert @bfs_graph.get_vertex_predecessor(Vertex.new(11)) == Vertex.new(8) or @bfs_graph.get_vertex_predecessor(Vertex.new(11)) == Vertex.new(9)
+    
+  end
+  
+  def test_get_all_vertices
+    bfs_setup_easy
+    @bfs_graph.each {|vertex| assert vertex}
   end
   
   def test_vertex_color

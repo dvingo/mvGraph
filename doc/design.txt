@@ -24,3 +24,8 @@
   -Toy implementations
     -Slide puzzle
     -Chess/checkers
+    
+======
+ TODO
+======
+-Add a README
