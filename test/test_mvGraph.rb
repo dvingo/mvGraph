@@ -112,13 +112,22 @@ class TestGraph < MiniTest::Unit::TestCase
     assert_equal "black", @bfs_graph.get_vertex_color(Vertex.new(1))
     assert_equal 0, @bfs_graph.get_vertex_distance(Vertex.new(1))
     assert_equal nil, @bfs_graph.get_vertex_predecessor(Vertex.new(1))
-    
-    @bfs_graph.each {|vertex| p vertex}
-    
-    #assert_equal @bfs_graph.get_vertex_color(Vertex.new(11)), "black"
-    #assert @bfs_graph.get_vertex_distance(Vertex.new(11)) == 6 or @bfs_graph.get_vertex_distance(Vertex.new(11)) == 5
-    #assert @bfs_graph.get_vertex_predecessor(Vertex.new(11)) == Vertex.new(8) or @bfs_graph.get_vertex_predecessor(Vertex.new(11)) == Vertex.new(9)
-    
+    assert_equal @bfs_graph.get_vertex_color(Vertex.new(11)), "black"
+    assert @bfs_graph.get_vertex_distance(Vertex.new(11)) == 5
+    assert @bfs_graph.get_vertex_predecessor(Vertex.new(11)) == Vertex.new(9)
+  end
+
+  def test_print_shortest_path
+    bfs_setup_hard
+    assert @bfs_graph
+    @bfs_graph.bfs(Vertex.new(1))
+    path = @bfs_graph.shortest_path(Vertex.new(1), Vertex.new(11))
+    assert path[0] == Vertex.new(1) 
+    assert path[1] == Vertex.new(2) 
+    assert path[2] == Vertex.new(5) 
+    assert path[3] == Vertex.new(10) 
+    assert path[4] == Vertex.new(9) 
+    assert path[5] == Vertex.new(11) 
   end
   
   def test_get_all_vertices

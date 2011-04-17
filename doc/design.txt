@@ -9,7 +9,7 @@
     -Static image (png, jpeg, etc.)
 -Graph Methods
   -Search
-    -Breadth-first
+    *-Breadth-first
     -Depth-first
       -Iterative Depth-first
     -Best-first

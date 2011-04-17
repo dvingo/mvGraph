@@ -47,6 +47,22 @@ class Graph
       set_vertex_color(get_graph_vertex(current_vertex), "black")
     end
   end
+ 
+  # 
+  # Precondition: BFS has been run on the graph
+  #
+  def shortest_path(start_vertex, end_vertex)
+    @ret_array ||= []
+    predecessor = get_vertex_predecessor(get_graph_vertex(end_vertex))
+    if start_vertex == end_vertex
+      @ret_array << get_graph_vertex(start_vertex)
+    elsif predecessor.nil?
+      "No path."
+    else
+      shortest_path(get_graph_vertex(start_vertex), predecessor)
+      @ret_array << get_graph_vertex(end_vertex)
+    end
+  end
   
   def set_vertex_color(v, color)
     get_graph_vertex(v).color = color
