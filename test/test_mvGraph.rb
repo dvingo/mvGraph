@@ -117,7 +117,7 @@ class TestGraph < MiniTest::Unit::TestCase
     assert @bfs_graph.get_vertex_predecessor(Vertex.new(11)) == Vertex.new(9)
   end
 
-  def test_print_shortest_path
+  def test_shortest_path
     bfs_setup_hard
     assert @bfs_graph
     @bfs_graph.bfs(Vertex.new(1))
@@ -128,6 +128,15 @@ class TestGraph < MiniTest::Unit::TestCase
     assert path[3] == Vertex.new(10) 
     assert path[4] == Vertex.new(9) 
     assert path[5] == Vertex.new(11) 
+  end
+
+  def test_no_shortest_path
+    bfs_setup_hard
+    assert @bfs_graph
+    @bfs_graph.add_vertex(Vertex.new(20))
+    @bfs_graph.bfs(Vertex.new(1))
+    path = @bfs_graph.shortest_path(Vertex.new(1), Vertex.new(20))
+    assert path == "No path."
   end
   
   def test_get_all_vertices
