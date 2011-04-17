@@ -10,6 +10,7 @@
 -Graph Methods
   -Search
     *-Breadth-first
+      *-Shortest-path
     -Depth-first
       -Iterative Depth-first
     -Best-first
