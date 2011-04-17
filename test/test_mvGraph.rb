@@ -80,17 +80,18 @@ class TestGraph < MiniTest::Unit::TestCase
     @bfs_graph.add_vertex(Vertex.new(9))
     @bfs_graph.add_vertex(Vertex.new(10))
     @bfs_graph.add_vertex(Vertex.new(11))
+
     @bfs_graph.add_edge(Vertex.new(1),Vertex.new(2))
     @bfs_graph.add_edge(Vertex.new(1),Vertex.new(3))
     @bfs_graph.add_edge(Vertex.new(1),Vertex.new(4))
     @bfs_graph.add_edge(Vertex.new(2),Vertex.new(5))
     @bfs_graph.add_edge(Vertex.new(5),Vertex.new(6))
-    @bfs_graph.add_edge(Vertex.new(7),Vertex.new(8))
     @bfs_graph.add_edge(Vertex.new(6),Vertex.new(7))
-    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(1))
-    @bfs_graph.add_edge(Vertex.new(9),Vertex.new(1))
-    @bfs_graph.add_edge(Vertex.new(9),Vertex.new(1))
+    @bfs_graph.add_edge(Vertex.new(7),Vertex.new(8))
+    @bfs_graph.add_edge(Vertex.new(11),Vertex.new(8))
     @bfs_graph.add_edge(Vertex.new(10),Vertex.new(5))
+    @bfs_graph.add_edge(Vertex.new(10),Vertex.new(9))
+    @bfs_graph.add_edge(Vertex.new(11),Vertex.new(9))
   end
   
   def bfs_setup_easy
@@ -105,7 +106,7 @@ class TestGraph < MiniTest::Unit::TestCase
   end
   
   def test_bfs
-    bfs_setup_easy
+    bfs_setup_hard
     assert @bfs_graph
     @bfs_graph.bfs(Vertex.new(1))
     assert_equal "black", @bfs_graph.get_vertex_color(Vertex.new(1))
