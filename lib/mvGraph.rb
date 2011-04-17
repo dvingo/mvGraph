@@ -33,22 +33,18 @@ class Graph
   def bfs(start_vertex)
     set_vertex_color(start_vertex, "gray")
     set_vertex_distance(start_vertex, 0)
-    queue = @adj_list[start_vertex]
-    last_neighbor = get_graph_vertex(start_vertex)
+    queue = [get_graph_vertex(start_vertex)]
     while queue.length != 0
-      queue.each do |neighbor|
-        if get_vertex_color(get_graph_vertex(neighbor)) != "black"
+      current_vertex = queue.pop
+      @adj_list[get_graph_vertex(current_vertex)].each do |neighbor|
+        if get_vertex_color(get_graph_vertex(neighbor)) == "white"
           set_vertex_color(get_graph_vertex(neighbor), "gray")
-          set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(last_neighbor)) + 1)
-          set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(last_neighbor))
+          set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+          set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+	  queue.insert(0, get_graph_vertex(neighbor))
         end
       end
-      @adj_list[queue.first].each do |neighbor|
-        queue << get_graph_vertex(neighbor) if get_vertex_color(neighbor) == "white"
-      end
-      set_vertex_color(get_graph_vertex(last_neighbor), "black")
-      last_neighbor = get_graph_vertex(queue.first)
-      queue.delete(get_graph_vertex(queue.first)) if get_vertex_color(get_graph_vertex(queue.first)) == "black"
+      set_vertex_color(get_graph_vertex(current_vertex), "black")
     end
   end
   
@@ -69,7 +65,7 @@ class Graph
   end
   
   def set_vertex_predecessor(v, predecessor)
-    get_graph_vertex(v).predecessor = predecessor
+    get_graph_vertex(v).predecessor = get_graph_vertex(predecessor) unless predecessor.nil?
   end
 
   def get_vertex_predecessor(v)
@@ -107,7 +103,10 @@ class Vertex
   def hash
     @id.hash
   end
-  
+
+  def to_s
+    "id: #{@id}, color: #{@color}, distance: #{@distance}, predecessor: \n\t\t #{@predecessor}"
+  end
 end
 
 class Edge
