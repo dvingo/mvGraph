@@ -16,5 +16,4 @@ class Queue < Array
     end
     the_string[0..the_string.size()-2]
   end
-
 end
