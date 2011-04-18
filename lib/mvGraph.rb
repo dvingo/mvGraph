@@ -1,3 +1,4 @@
+require_relative 'mvQueue.rb'
 class Graph
   include Enumerable
   
@@ -33,15 +34,16 @@ class Graph
   def bfs(start_vertex)
     set_vertex_color(start_vertex, "gray")
     set_vertex_distance(start_vertex, 0)
-    queue = [get_graph_vertex(start_vertex)]
+    queue = Queue.new
+    queue.enqueue(get_graph_vertex(start_vertex))
     while queue.length != 0
-      current_vertex = queue.pop
+      current_vertex = queue.dequeue
       @adj_list[get_graph_vertex(current_vertex)].each do |neighbor|
         if get_vertex_color(get_graph_vertex(neighbor)) == "white"
           set_vertex_color(get_graph_vertex(neighbor), "gray")
           set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
           set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
-	  queue.insert(0, get_graph_vertex(neighbor))
+	  queue.enqueue(get_graph_vertex(neighbor))
         end
       end
       set_vertex_color(get_graph_vertex(current_vertex), "black")
