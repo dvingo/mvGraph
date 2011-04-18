@@ -3,11 +3,11 @@ require_relative '../lib/mvQueue.rb'
 
 class TestQueue < MiniTest::Unit::TestCase
   def setup
-    @queue = Queue.new
+    @queue = Queue.new("fifo")
   end
 
-  def iterate_setup
-    @queue = Queue.new
+  def iterate_setup(type)
+    @queue = Queue.new(type)
     @queue.enqueue(1)
     @queue.enqueue(2)
     @queue.enqueue(3)
@@ -25,7 +25,7 @@ class TestQueue < MiniTest::Unit::TestCase
   end
 
   def test_iterate_queue
-    iterate_setup
+    iterate_setup("fifo")
     assert_equal 1, @queue.dequeue
     assert_equal 2, @queue.dequeue
     assert_equal 3, @queue.dequeue
@@ -35,7 +35,13 @@ class TestQueue < MiniTest::Unit::TestCase
   end
   
   def test_to_string
-    iterate_setup
+    iterate_setup("fifo")
     assert_equal "5,4,3,2,1", @queue.to_s
   end
+  
+  def test_to_string_stack
+    iterate_setup("lifo")
+    assert_equal "1,2,3,4,5", @queue.to_s
+  end
+  
 end

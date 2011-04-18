@@ -34,7 +34,7 @@ class Graph
   def bfs(start_vertex)
     set_vertex_color(start_vertex, "gray")
     set_vertex_distance(start_vertex, 0)
-    queue = Queue.new
+    queue = Queue.new("lifo")
     queue.enqueue(get_graph_vertex(start_vertex))
     while queue.length != 0
       current_vertex = queue.dequeue
