@@ -108,7 +108,7 @@ class TestGraph < MiniTest::Unit::TestCase
   def test_bfs
     bfs_setup_hard
     assert @bfs_graph
-    @bfs_graph.bfs(Vertex.new(1))
+    @bfs_graph.search(Vertex.new(1), "fifo")
     assert_equal "black", @bfs_graph.get_vertex_color(Vertex.new(1))
     assert_equal 0, @bfs_graph.get_vertex_distance(Vertex.new(1))
     assert_equal nil, @bfs_graph.get_vertex_predecessor(Vertex.new(1))
@@ -120,7 +120,7 @@ class TestGraph < MiniTest::Unit::TestCase
   def test_shortest_path
     bfs_setup_hard
     assert @bfs_graph
-    @bfs_graph.bfs(Vertex.new(1))
+    @bfs_graph.search(Vertex.new(1), "fifo")
     path = @bfs_graph.shortest_path(Vertex.new(1), Vertex.new(11))
     assert path[0] == Vertex.new(1) 
     assert path[1] == Vertex.new(2) 
@@ -134,7 +134,7 @@ class TestGraph < MiniTest::Unit::TestCase
     bfs_setup_hard
     assert @bfs_graph
     @bfs_graph.add_vertex(Vertex.new(20))
-    @bfs_graph.bfs(Vertex.new(1))
+    @bfs_graph.search(Vertex.new(1), "fifo")
     path = @bfs_graph.shortest_path(Vertex.new(1), Vertex.new(20))
     assert path == "No path."
   end
@@ -160,6 +160,18 @@ class TestGraph < MiniTest::Unit::TestCase
     @graph.add_vertex(Vertex.new(1))
     @graph.set_vertex_predecessor(Vertex.new(1), nil)
     assert_equal @graph.get_vertex_predecessor(Vertex.new(1)), nil
+  end
+  
+  def test_dfs
+    bfs_setup_hard
+    assert @bfs_graph
+    @bfs_graph.search(Vertex.new(1), "lifo")
+    assert_equal "black", @bfs_graph.get_vertex_color(Vertex.new(1))
+    assert_equal 0, @bfs_graph.get_vertex_distance(Vertex.new(1))
+    assert_equal nil, @bfs_graph.get_vertex_predecessor(Vertex.new(1))
+    assert_equal @bfs_graph.get_vertex_color(Vertex.new(11)), "black"
+    assert @bfs_graph.get_vertex_distance(Vertex.new(11)) == 5
+    assert @bfs_graph.get_vertex_predecessor(Vertex.new(11)) == Vertex.new(9)
   end
   
 end

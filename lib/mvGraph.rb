@@ -31,10 +31,10 @@ class Graph
     end
   end
   
-  def bfs(start_vertex)
+  def search(start_vertex, type)
     set_vertex_color(start_vertex, "gray")
     set_vertex_distance(start_vertex, 0)
-    queue = Queue.new("lifo")
+    queue = Queue.new(type)
     queue.enqueue(get_graph_vertex(start_vertex))
     while queue.length != 0
       current_vertex = queue.dequeue
