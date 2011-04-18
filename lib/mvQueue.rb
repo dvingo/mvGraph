@@ -1,23 +1,20 @@
 class Queue < Array
-  include Enumerable
-
-  def each
-    0..@queue.size().each do |i|
-       yield @queue.pop
-    end
-  end
-
-  def initialize
-    @queue = [] 
-  end
 
   def enqueue(item)
-    queue.insert(0, item) 
+    self.insert(0, item) 
   end
 
   def dequeue
-    queue.pop
+    self.pop
   end
-  private 
-  attr_accessor :queue
+  
+  def to_s
+    the_string = ""
+    self.each do |item|
+      the_string += item.to_s
+      the_string += ","
+    end
+    the_string[0..the_string.size()-2]
+  end
+
 end

@@ -33,4 +33,9 @@ class TestQueue < MiniTest::Unit::TestCase
     assert_equal 5, @queue.dequeue
     assert @queue.empty?
   end
+  
+  def test_to_string
+    iterate_setup
+    assert_equal "5,4,3,2,1", @queue.to_s
+  end
 end
