@@ -43,5 +43,4 @@ class TestQueue < MiniTest::Unit::TestCase
     iterate_setup("lifo")
     assert_equal "1,2,3,4,5", @queue.to_s
   end
-  
 end

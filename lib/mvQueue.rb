@@ -1,6 +1,4 @@
 class Queue < Array
-
-
   def initialize(type)
     #super()
     @type = type

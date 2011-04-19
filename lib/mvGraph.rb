@@ -43,7 +43,7 @@ class Graph
           set_vertex_color(get_graph_vertex(neighbor), "gray")
           set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
           set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
-	      queue.enqueue(get_graph_vertex(neighbor))
+          queue.enqueue(get_graph_vertex(neighbor))
         end
       end
       set_vertex_color(get_graph_vertex(current_vertex), "black")
@@ -94,7 +94,6 @@ class Graph
   def get_graph_vertex(v)
     @adj_list.keys[@adj_list.keys.index(v)]
   end
-  
 end
 
 class Vertex
