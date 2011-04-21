@@ -53,10 +53,12 @@ class Graph
 	end
 	set_vertex_color(get_graph_vertex(current_vertex), "black")
       else
-	neighbors = neighbor_function.call(get_graph_vertex(current_vertex))
+	neighbors = get_graph_vertex(current_vertex).send(neighbor_function)
 	neighbors.each do |neighbor|
+	  add_vertex neighbor
+	  add_edge current_vertex, neighbor
 	  if neighbor == goal_state
-	    p "goal: #{neighbor}"
+	    puts "goal: #{neighbor}"
 	    search = false
 	    break
 	  end
