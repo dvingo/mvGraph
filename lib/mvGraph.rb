@@ -149,7 +149,3 @@ class Vertex
     "id: #{@id}, color: #{@color}, distance: #{@distance}, predecessor: \n\t\t #{@predecessor}"
   end
 end
-
-class Edge
-  
-end

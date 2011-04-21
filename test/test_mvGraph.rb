@@ -5,7 +5,6 @@ class TestGraph < MiniTest::Unit::TestCase
   def setup
     @graph = Graph.new
     @vertex = Vertex.new(1)
-    @edge = Edge.new
   end
 
   def test_create_graph
@@ -14,10 +13,6 @@ class TestGraph < MiniTest::Unit::TestCase
   
   def test_create_vertex
     assert @vertex
-  end
-  
-  def test_create_edge
-    assert @edge
   end
   
   def test_vertex_id
