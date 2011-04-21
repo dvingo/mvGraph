@@ -31,22 +31,44 @@ class Graph
     end
   end
   
-  def search(start_vertex, type)
+  #
+  # queue_type is one of fifo or lifo
+  #
+  def search(start_vertex, queue_type, neighbor_function=nil, goal_state=nil)
     set_vertex_color(start_vertex, "gray")
     set_vertex_distance(start_vertex, 0)
-    queue = Queue.new(type)
+    queue = Queue.new(queue_type)
     queue.enqueue(get_graph_vertex(start_vertex))
-    while queue.length != 0
+    search = true
+    while queue.length != 0 and search == true
       current_vertex = queue.dequeue
-      @adj_list[get_graph_vertex(current_vertex)].each do |neighbor|
-        if get_vertex_color(get_graph_vertex(neighbor)) == "white"
-          set_vertex_color(get_graph_vertex(neighbor), "gray")
-          set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
-          set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
-          queue.enqueue(get_graph_vertex(neighbor))
-        end
+      if neighbor_function.nil?
+	@adj_list[get_graph_vertex(current_vertex)].each do |neighbor|
+	  if get_vertex_color(get_graph_vertex(neighbor)) == "white"
+	    set_vertex_color(get_graph_vertex(neighbor), "gray")
+	    set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+	    set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+	    queue.enqueue(get_graph_vertex(neighbor))
+	  end
+	end
+	set_vertex_color(get_graph_vertex(current_vertex), "black")
+      else
+	neighbors = neighbor_function.call(get_graph_vertex(current_vertex))
+	neighbors.each do |neighbor|
+	  if neighbor == goal_state
+	    p "goal: #{neighbor}"
+	    search = false
+	    break
+	  end
+	  if get_vertex_color(get_graph_vertex(neighbor)) == "white"
+	    set_vertex_color(get_graph_vertex(neighbor), "gray")
+	    set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+	    set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+	    queue.enqueue(get_graph_vertex(neighbor))
+	  end
+	end
+	set_vertex_color(get_graph_vertex(current_vertex), "black")
       end
-      set_vertex_color(get_graph_vertex(current_vertex), "black")
     end
   end
  

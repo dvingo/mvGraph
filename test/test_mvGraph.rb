@@ -100,9 +100,9 @@ class TestGraph < MiniTest::Unit::TestCase
     @bfs_graph.add_vertex(Vertex.new(2))
     @bfs_graph.add_vertex(Vertex.new(3))
     @bfs_graph.add_vertex(Vertex.new(4))
-    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(2))
-    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(3))
-    @bfs_graph.add_edge(Vertex.new(1),Vertex.new(4))
+    @bfs_graph.add_edge(Vertex.new(1), Vertex.new(2))
+    @bfs_graph.add_edge(Vertex.new(1), Vertex.new(3))
+    @bfs_graph.add_edge(Vertex.new(1), Vertex.new(4))
   end
   
   def test_bfs
@@ -141,7 +141,7 @@ class TestGraph < MiniTest::Unit::TestCase
   
   def test_get_all_vertices
     bfs_setup_easy
-    @bfs_graph.each {|vertex| assert vertex}
+    @bfs_graph.each { |vertex| assert vertex }
   end
   
   def test_vertex_color
@@ -173,5 +173,4 @@ class TestGraph < MiniTest::Unit::TestCase
     assert @bfs_graph.get_vertex_distance(Vertex.new(11)) == 5
     assert @bfs_graph.get_vertex_predecessor(Vertex.new(11)) == Vertex.new(9)
   end
-  
 end
