@@ -39,8 +39,9 @@ class Graph
     set_vertex_distance(start_vertex, 0)
     queue = Queue.new(queue_type)
     queue.enqueue(get_graph_vertex(start_vertex))
-    search = true
-    while queue.length != 0 and search == true
+    goal_not_reached = true
+    count = 0
+    while queue.length != 0 and goal_not_reached
       current_vertex = queue.dequeue
       if neighbor_function.nil?
 	@adj_list[get_graph_vertex(current_vertex)].each do |neighbor|
@@ -53,23 +54,26 @@ class Graph
 	end
 	set_vertex_color(get_graph_vertex(current_vertex), "black")
       else
-	neighbors = get_graph_vertex(current_vertex).send(neighbor_function)
+	count += 1
+	neighbors = get_graph_vertex(current_vertex).send(neighbor_function, goal_state)
 	neighbors.each do |neighbor|
-	  add_vertex neighbor
-	  add_edge current_vertex, neighbor
-	  if neighbor == goal_state
-	    puts "goal: #{neighbor}"
-	    search = false
-	    break
-	  end
-	  if get_vertex_color(get_graph_vertex(neighbor)) == "white"
-	    set_vertex_color(get_graph_vertex(neighbor), "gray")
-	    set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
-	    set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
-	    queue.enqueue(get_graph_vertex(neighbor))
+	  unless self.include? neighbor
+	    add_vertex neighbor 
+	    add_edge current_vertex, neighbor
+	    if neighbor == goal_state
+	      puts "goal: #{neighbor}"
+	      goal_not_reached = false
+	      break
+	    end
+	    if get_vertex_color(get_graph_vertex(neighbor)) == "white"
+	      set_vertex_color(get_graph_vertex(neighbor), "gray")
+	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+	      queue.enqueue(get_graph_vertex(neighbor))
+	    end
+	    set_vertex_color(get_graph_vertex(current_vertex), "black")
 	  end
 	end
-	set_vertex_color(get_graph_vertex(current_vertex), "black")
       end
     end
   end

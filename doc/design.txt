@@ -29,4 +29,5 @@
 ======
  TODO
 ======
--Add a README
+- Add a README
+- Setup Rake tasks for testing with nPuzzle and mvGraph together.
