@@ -34,15 +34,18 @@ class Graph
   #
   # queue_type is one of fifo or lifo
   #
-  def search(start_vertex, queue_type, neighbor_function=nil, goal_state=nil)
+  # Look into passing a hash of arguments
+  def search(start_vertex, queue_type, neighbor_function=nil, goal_state=nil, search_depth=nil)
     set_vertex_color(start_vertex, "gray")
     set_vertex_distance(start_vertex, 0)
     queue = Queue.new(queue_type)
     queue.enqueue(get_graph_vertex(start_vertex))
     goal_not_reached = true
     count = 0
-    while queue.length != 0 and goal_not_reached
+    return_goal_state = nil
+    while queue.length != 0 and goal_not_reached and count != search_depth
       current_vertex = queue.dequeue
+      count += 1
       if neighbor_function.nil?
 	@adj_list[get_graph_vertex(current_vertex)].each do |neighbor|
 	  if get_vertex_color(get_graph_vertex(neighbor)) == "white"
@@ -53,14 +56,15 @@ class Graph
 	  end
 	end
 	set_vertex_color(get_graph_vertex(current_vertex), "black")
-      else
-	count += 1
+      elsif !goal_state.nil?
 	neighbors = get_graph_vertex(current_vertex).send(neighbor_function, goal_state)
 	neighbors.each do |neighbor|
 	  unless self.include? neighbor
 	    add_vertex neighbor 
 	    add_edge current_vertex, neighbor
+	    
 	    if neighbor == goal_state
+	      return_goal_state = neighbor
 	      puts "goal: #{neighbor}"
 	      goal_not_reached = false
 	      break
@@ -74,8 +78,34 @@ class Graph
 	    set_vertex_color(get_graph_vertex(current_vertex), "black")
 	  end
 	end
-      end
+      elsif !search_depth.nil?
+	neighbors = get_graph_vertex(current_vertex).send(neighbor_function, goal_state)
+	neighbors.each do |neighbor|
+	  unless self.include? neighbor
+	    add_vertex neighbor 
+	    add_edge current_vertex, neighbor
+	    
+	    if count == search_depth
+	      return_goal_state = neighbor
+	      puts "Solution at #{distance}: #{neighbor}"
+	      goal_not_reached = false
+	      break
+	    end
+	    if get_vertex_color(get_graph_vertex(neighbor)) == "white"
+	      set_vertex_color(get_graph_vertex(neighbor), "gray")
+	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+	      queue.enqueue(get_graph_vertex(neighbor))
+	    end
+	    set_vertex_color(get_graph_vertex(current_vertex), "black")
+	  end
+	end
+
+      else
+	# Other possible prototypes
+      end	
     end
+    return return_goal_state, count
   end
  
   # 
