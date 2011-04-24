@@ -43,10 +43,11 @@ class Graph
     goal_not_reached = true
     count = 0
     return_goal_state = nil
-    while queue.length != 0 and goal_not_reached and count != search_depth
+    while queue.length != 0 and goal_not_reached
       current_vertex = queue.dequeue
       count += 1
-      if neighbor_function.nil?
+      # Full BFS or DFS with no goal state
+      if neighbor_function.nil? and search_depth.nil? and goal_state.nil?
 	@adj_list[get_graph_vertex(current_vertex)].each do |neighbor|
 	  if get_vertex_color(get_graph_vertex(neighbor)) == "white"
 	    set_vertex_color(get_graph_vertex(neighbor), "gray")
@@ -56,7 +57,8 @@ class Graph
 	  end
 	end
 	set_vertex_color(get_graph_vertex(current_vertex), "black")
-      elsif !goal_state.nil?
+      # Search for goal_state with no distance limit
+      elsif !neighbor_function.nil? and !goal_state.nil? and search_depth.nil?
 	neighbors = get_graph_vertex(current_vertex).send(neighbor_function, goal_state)
 	neighbors.each do |neighbor|
 	  unless self.include? neighbor
@@ -64,6 +66,9 @@ class Graph
 	    add_edge current_vertex, neighbor
 	    
 	    if neighbor == goal_state
+              set_vertex_color(get_graph_vertex(neighbor), "gray")
+	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
 	      return_goal_state = neighbor
 	      puts "goal: #{neighbor}"
 	      goal_not_reached = false
@@ -78,16 +83,16 @@ class Graph
 	    set_vertex_color(get_graph_vertex(current_vertex), "black")
 	  end
 	end
-      elsif !search_depth.nil?
-	neighbors = get_graph_vertex(current_vertex).send(neighbor_function, goal_state)
+      # Random walk to a given distance and no goal state
+      elsif !neighbor_function.nil? and goal_state.nil? and !search_depth.nil?
+	neighbors = get_graph_vertex(current_vertex).send(neighbor_function)
 	neighbors.each do |neighbor|
 	  unless self.include? neighbor
 	    add_vertex neighbor 
 	    add_edge current_vertex, neighbor
-	    
 	    if count == search_depth
 	      return_goal_state = neighbor
-	      puts "Solution at #{distance}: #{neighbor}"
+	      puts "Solution at #{count}: #{neighbor}"
 	      goal_not_reached = false
 	      break
 	    end
@@ -100,12 +105,16 @@ class Graph
 	    set_vertex_color(get_graph_vertex(current_vertex), "black")
 	  end
 	end
-
       else
 	# Other possible prototypes
       end	
     end
     return return_goal_state, count
+  end
+
+  # Performs depth-first search to the given depth, starting at the vertex start_state.
+  def walk_n_steps(start_state, neighbor_function, depth)
+    search(start_state, "lifo", neighbor_function, nil, depth)
   end
  
   # 
