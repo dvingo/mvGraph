@@ -17,6 +17,8 @@
     -Greedy
     -A*
 -Database
+-Back-end representation
+  -Give the option to use adjacency list or adjacency matrix to use more memory but make the search faster
 -Sub/Supertypes
   -Simple
   -Directed
@@ -25,9 +27,12 @@
   -Toy implementations
     -Slide puzzle
     -Chess/checkers
+-Perfomance enhancements
+  -Hash function to compare states instead of nxn linear search of the grid size when testing equality.
     
 ======
  TODO
 ======
 - Add a README
 - Setup Rake tasks for testing with nPuzzle and mvGraph together.
+

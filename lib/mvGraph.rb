@@ -70,7 +70,6 @@ class Graph
 	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
 	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
 	      return_goal_state = neighbor
-	      puts "goal: #{neighbor}"
 	      goal_not_reached = false
 	      break
 	    end
@@ -92,7 +91,6 @@ class Graph
 	    add_edge current_vertex, neighbor
 	    if count == search_depth
 	      return_goal_state = neighbor
-	      puts "Solution at #{count}: #{neighbor}"
 	      goal_not_reached = false
 	      break
 	    end
