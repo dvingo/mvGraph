@@ -1,33 +1,33 @@
 require_relative 'mvQueue.rb'
 class Graph
   include Enumerable
-  
   def each
-    @adj_list.keys.each do |vertex|
+    @adj_matrix.keys.each do |vertex|
       yield vertex
     end
   end
   
   def initialize
-    @adj_list = Hash.new
+    @adj_matrix = Hash.new 
   end
   
   def add_vertex(v)
-    @adj_list[v] = Array.new
+    @adj_matrix[v] = Hash.new
   end
   
   def vertex(v)
-    @adj_list[v]
+    @adj_matrix.each { |v| puts "v in vertex: #{v[0]}" }
+    #@adj_matrix.find { |vertex| vertex[0] == v }
   end
   
   def add_edge(v1, v2)
-    @adj_list[v1] << v2
-    @adj_list[v2] << v1
+    @adj_matrix[v1][v2] = 1
+    @adj_matrix[v2][v1] = 1
   end
   
   def has_edge?(v1, v2)
-    unless @adj_list[v1].nil? and @adj_list[v2].nil?
-      @adj_list[v1].include? v2 and @adj_list[v2].include? v1
+    unless @adj_matrix[v1][v2].nil?
+      @adj_matrix[v1][v2] == 1
     end
   end
   
@@ -36,10 +36,10 @@ class Graph
   #
   # Look into passing a hash of arguments
   def search(start_vertex, queue_type, neighbor_function=nil, goal_state=nil, search_depth=nil)
-    set_vertex_color(start_vertex, "gray")
-    set_vertex_distance(start_vertex, 0)
+    start_vertex.color = "gray"
+    start_vertex.distance = 0
     queue = Queue.new(queue_type)
-    queue.enqueue(get_graph_vertex(start_vertex))
+    queue.enqueue(start_vertex)
     goal_not_reached = true
     count = 0
     return_goal_state = nil
@@ -48,59 +48,59 @@ class Graph
       count += 1
       # Full BFS or DFS with no goal state
       if neighbor_function.nil? and search_depth.nil? and goal_state.nil?
-	@adj_list[get_graph_vertex(current_vertex)].each do |neighbor|
-	  if get_vertex_color(get_graph_vertex(neighbor)) == "white"
-	    set_vertex_color(get_graph_vertex(neighbor), "gray")
-	    set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
-	    set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
-	    queue.enqueue(get_graph_vertex(neighbor))
+	@adj_matrix[current_vertex].each do |neighbor|
+	  if neighbor.color == "white"
+	    neighbor.color = "gray"
+	    neighbor.distance =  current_vertex.distance + 1
+	    neighbor.predecessor = current_vertex
+	    queue.enqueue(neighbor)
 	  end
 	end
-	set_vertex_color(get_graph_vertex(current_vertex), "black")
+	current_vertex.color = "black"
       # Search for goal_state with no distance limit
       elsif !neighbor_function.nil? and !goal_state.nil? and search_depth.nil?
-	neighbors = get_graph_vertex(current_vertex).send(neighbor_function, goal_state)
+	neighbors = current_vertex.send(neighbor_function, goal_state)
 	neighbors.each do |neighbor|
 	  unless self.include? neighbor
-	    add_vertex neighbor 
-	    add_edge current_vertex, neighbor
+	    self.add_vertex(neighbor)
+	    self.add_edge(current_vertex, neighbor)
 	    
 	    if neighbor == goal_state
-              set_vertex_color(get_graph_vertex(neighbor), "gray")
-	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
-	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+              neighbor.color = "gray"
+	      neighbor.distance = current_vertex.distance + 1
+	      neighbor.predecessor = current_vertex
 	      return_goal_state = neighbor
 	      goal_not_reached = false
 	      break
 	    end
-	    if get_vertex_color(get_graph_vertex(neighbor)) == "white"
-	      set_vertex_color(get_graph_vertex(neighbor), "gray")
-	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
-	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
-	      queue.enqueue(get_graph_vertex(neighbor))
+	    if neighbor.color == "white"
+	      neighbor.color = "gray"
+	      neighbor.distance = current_vertex.distance + 1
+	      neighbor.predecessor = current_vertex
+	      queue.enqueue(neighbor)
 	    end
-	    set_vertex_color(get_graph_vertex(current_vertex), "black")
+	    current_vertex.color = "black"
 	  end
 	end
       # Random walk to a given distance and no goal state
       elsif !neighbor_function.nil? and goal_state.nil? and !search_depth.nil?
-	neighbors = get_graph_vertex(current_vertex).send(neighbor_function)
+	neighbors = current_vertex.send(neighbor_function)
 	neighbors.each do |neighbor|
 	  unless self.include? neighbor
-	    add_vertex neighbor 
-	    add_edge current_vertex, neighbor
+	    add_vertex(neighbor)
+	    add_edge(current_vertex, neighbor)
 	    if count == search_depth
 	      return_goal_state = neighbor
 	      goal_not_reached = false
 	      break
 	    end
-	    if get_vertex_color(get_graph_vertex(neighbor)) == "white"
-	      set_vertex_color(get_graph_vertex(neighbor), "gray")
-	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
-	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
-	      queue.enqueue(get_graph_vertex(neighbor))
+	    if neighbor.color == "white"
+	      neighbor.color = "gray"
+	      neighbor.distance = current_vertex.distance + 1
+	      neighbor.predecessor = current_vertex
+	      queue.enqueue(neighbor)
 	    end
-	    set_vertex_color(get_graph_vertex(current_vertex), "black")
+	    current_vertex.color = "black"
 	  end
 	end
       else
@@ -120,53 +120,20 @@ class Graph
   #
   def shortest_path(start_vertex, end_vertex)
     @ret_array ||= []
-    predecessor = get_vertex_predecessor(get_graph_vertex(end_vertex))
+    predecessor = end_vertex.predecessor
     if start_vertex == end_vertex
-      @ret_array << get_graph_vertex(start_vertex)
+      @ret_array << start_vertex
     elsif predecessor.nil?
       "No path."
     else
-      shortest_path(get_graph_vertex(start_vertex), predecessor)
-      @ret_array << get_graph_vertex(end_vertex)
+      shortest_path(start_vertex, predecessor)
+      @ret_array << end_vertex
     end
-  end
-  
-  def set_vertex_color(v, color)
-    get_graph_vertex(v).color = color
-  end
-
-  def get_vertex_color(v)
-    get_graph_vertex(v).color
-  end
-  
-  def set_vertex_distance(v, distance)
-    get_graph_vertex(v).distance = distance
-  end
-
-  def get_vertex_distance(v)
-    get_graph_vertex(v).distance
-  end
-  
-  def set_vertex_predecessor(v, predecessor)
-    get_graph_vertex(v).predecessor = get_graph_vertex(predecessor) unless predecessor.nil?
-  end
-
-  def get_vertex_predecessor(v)
-    get_graph_vertex(v).predecessor
-  end
-  
-  private
-  def get_graph_vertex(v)
-    @adj_list.keys[@adj_list.keys.index(v)]
   end
 end
 
 class Vertex
-  attr_accessor :id
-  attr_accessor :color
-  attr_accessor :distance
-  attr_accessor :predecessor
-  
+  attr_accessor :id, :color, :distance, :predecessor
   def initialize(id)
     @id = id
     @color = "white"
