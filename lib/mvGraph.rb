@@ -24,8 +24,14 @@ class Graph
   end
   
   def add_edge(v1, v2)
-    @adj_matrix[v1][v2] = 1
-    @adj_matrix[v2][v1] = 1
+    if @adj_matrix[v1].nil?
+      @adj_matrix[v1] = Hash.new
+      @adj_matrix[v1][v2] = 1
+    end
+    if @adj_matrix[v2].nil?
+      @adj_matrix[v2] = Hash.new
+      @adj_matrix[v2][v1] = 1
+    end
   end
 
   def update_vertex(v)
@@ -66,48 +72,50 @@ class Graph
 	set_vertex_color(get_graph_vertex(current_vertex), "black")
       # Search for goal_state with no distance limit
       elsif !neighbor_function.nil? and !goal_state.nil? and search_depth.nil?
-	neighbors = current_vertex.send(neighbor_function, goal_state)
+	neighbors = get_graph_vertex(current_vertex).send(neighbor_function, goal_state)
 	neighbors.each do |neighbor|
 	  unless self.include? neighbor
 	    self.add_vertex(neighbor)
 	    self.add_edge(current_vertex, neighbor)
 	    
 	    if neighbor == goal_state
-              neighbor.color = "gray"
-	      neighbor.distance = current_vertex.distance + 1
-	      neighbor.predecessor = current_vertex
+              set_vertex_color(get_graph_vertex(neighbor), "gray")
+	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
 	      return_goal_state = neighbor
 	      goal_not_reached = false
 	      break
 	    end
-	    if neighbor.color == "white"
-	      neighbor.color = "gray"
-	      neighbor.distance = current_vertex.distance + 1
-	      neighbor.predecessor = current_vertex
-	      queue.enqueue(neighbor)
+	    if get_vertex_color(get_graph_vertex(neighbor)) == "white"
+	      set_vertex_color(get_graph_vertex(neighbor), "gray")
+	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+	      queue.enqueue(get_graph_vertex(neighbor))
 	    end
-	    current_vertex.color = "black"
+	    set_vertex_color(get_graph_vertex(current_vertex), "black")
 	  end
 	end
       # Random walk to a given distance and no goal state
       elsif !neighbor_function.nil? and goal_state.nil? and !search_depth.nil?
-	neighbors = current_vertex.send(neighbor_function)
+	puts "get_graph_vertex(current_vertex) #{get_graph_vertex(current_vertex)}"
+	puts "neighbor_func: #{neighbor_function}"
+	neighbors = get_graph_vertex(current_vertex).send(neighbor_function)
 	neighbors.each do |neighbor|
 	  unless self.include? neighbor
-	    add_vertex(neighbor)
-	    add_edge(current_vertex, neighbor)
+	    self.add_vertex(neighbor)
+	    self.add_edge(current_vertex, neighbor)
 	    if count == search_depth
 	      return_goal_state = neighbor
 	      goal_not_reached = false
 	      break
 	    end
-	    if neighbor.color == "white"
-	      neighbor.color = "gray"
-	      neighbor.distance = current_vertex.distance + 1
-	      neighbor.predecessor = current_vertex
-	      queue.enqueue(neighbor)
+	    if get_vertex_color(get_graph_vertex(neighbor)) == "white"
+	      set_vertex_color(get_graph_vertex(neighbor), "gray")
+	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+	      queue.enqueue(get_graph_vertex(neighbor))
 	    end
-	    current_vertex.color = "black"
+	    set_vertex_color(get_graph_vertex(current_vertex), "black")
 	  end
 	end
       else
@@ -119,6 +127,7 @@ class Graph
 
   # Performs depth-first search to the given depth, starting at the vertex start_state.
   def walk_n_steps(start_state, neighbor_function, depth)
+    puts "start_state: #{start_state}"
     search(start_state, "lifo", neighbor_function, nil, depth)
   end
  
@@ -127,14 +136,14 @@ class Graph
   #
   def shortest_path(start_vertex, end_vertex)
     @ret_array ||= []
-    predecessor = end_vertex.predecessor
+    predecessor = get_vertex_predecessor(get_graph_vertex(end_vertex))
     if start_vertex == end_vertex
-      @ret_array << start_vertex
+      @ret_array << get_graph_vertex(start_vertex)
     elsif predecessor.nil?
       "No path."
     else
-      shortest_path(start_vertex, predecessor)
-      @ret_array << end_vertex
+      shortest_path(get_graph_vertex(start_vertex), predecessor)
+      @ret_array << get_graph_vertex(end_vertex)
     end
   end
 
