@@ -1,3 +1,7 @@
+The graph is currently implemented in an undirected manner, such that
+adding an edge will add edges in both directions, this can easily be changed 
+for example to implement a directed graph, or if you desire the behavior to 
+explicitly set edges in both directions for two vertices.
 ==============
  New Features
 ==============
@@ -11,9 +15,9 @@
   -Search
     *-Breadth-first
       *-Shortest-path
-    -Depth-first
+    *-Depth-first
       -Iterative Depth-first
-    -Best-first
+    *-Best-first
     -Greedy
     -A*
 -Database

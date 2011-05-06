@@ -6,6 +6,10 @@ class Graph
       yield vertex
     end
   end
+
+  def neighbors_of(vertex)
+    @adj_matrix[vertex].select { |v| has_edge?(vertex, v) }.keys
+  end
   
   def initialize
     @adj_matrix = Hash.new 
@@ -16,17 +20,20 @@ class Graph
   end
   
   def vertex(v)
-    @adj_matrix.each { |v| puts "v in vertex: #{v[0]}" }
-    #@adj_matrix.find { |vertex| vertex[0] == v }
+    @adj_matrix.find { |vertex| vertex[0] == v }[0]
   end
   
   def add_edge(v1, v2)
     @adj_matrix[v1][v2] = 1
     @adj_matrix[v2][v1] = 1
   end
+
+  def update_vertex(v)
+    @adj_matrix[v] = @adj_matrix[vertex(v)]
+  end
   
   def has_edge?(v1, v2)
-    unless @adj_matrix[v1][v2].nil?
+    unless @adj_matrix[v1].nil? or @adj_matrix[v1][v2].nil?
       @adj_matrix[v1][v2] == 1
     end
   end
@@ -48,7 +55,7 @@ class Graph
       count += 1
       # Full BFS or DFS with no goal state
       if neighbor_function.nil? and search_depth.nil? and goal_state.nil?
-	@adj_matrix[current_vertex].each do |neighbor|
+        neighbors_of(current_vertex).each do |neighbor|
 	  if neighbor.color == "white"
 	    neighbor.color = "gray"
 	    neighbor.distance =  current_vertex.distance + 1
@@ -57,6 +64,7 @@ class Graph
 	  end
 	end
 	current_vertex.color = "black"
+        puts "current_vertex.color: #{vertex(current_vertex).color}"
       # Search for goal_state with no distance limit
       elsif !neighbor_function.nil? and !goal_state.nil? and search_depth.nil?
 	neighbors = current_vertex.send(neighbor_function, goal_state)
