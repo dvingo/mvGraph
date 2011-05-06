@@ -43,10 +43,10 @@ class Graph
   #
   # Look into passing a hash of arguments
   def search(start_vertex, queue_type, neighbor_function=nil, goal_state=nil, search_depth=nil)
-    start_vertex.color = "gray"
-    start_vertex.distance = 0
+    set_vertex_color(start_vertex, "gray")
+    set_vertex_distance(start_vertex, 0)
     queue = Queue.new(queue_type)
-    queue.enqueue(start_vertex)
+    queue.enqueue(get_graph_vertex(start_vertex))
     goal_not_reached = true
     count = 0
     return_goal_state = nil
@@ -57,14 +57,13 @@ class Graph
       if neighbor_function.nil? and search_depth.nil? and goal_state.nil?
         neighbors_of(current_vertex).each do |neighbor|
 	  if neighbor.color == "white"
-	    neighbor.color = "gray"
-	    neighbor.distance =  current_vertex.distance + 1
-	    neighbor.predecessor = current_vertex
-	    queue.enqueue(neighbor)
+	    set_vertex_color(get_graph_vertex(neighbor), "gray")
+	    set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
+	    set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+	    queue.enqueue(get_graph_vertex(neighbor))
 	  end
 	end
-	current_vertex.color = "black"
-        puts "current_vertex.color: #{vertex(current_vertex).color}"
+	set_vertex_color(get_graph_vertex(current_vertex), "black")
       # Search for goal_state with no distance limit
       elsif !neighbor_function.nil? and !goal_state.nil? and search_depth.nil?
 	neighbors = current_vertex.send(neighbor_function, goal_state)
@@ -137,6 +136,35 @@ class Graph
       shortest_path(start_vertex, predecessor)
       @ret_array << end_vertex
     end
+  end
+
+  def set_vertex_color(v, color)
+    get_graph_vertex(v).color = color
+  end
+
+  def get_vertex_color(v)
+    get_graph_vertex(v).color
+  end
+  
+  def set_vertex_distance(v, distance)
+    get_graph_vertex(v).distance = distance
+  end
+
+  def get_vertex_distance(v)
+    get_graph_vertex(v).distance
+  end
+  
+  def set_vertex_predecessor(v, predecessor)
+    get_graph_vertex(v).predecessor = get_graph_vertex(predecessor) unless predecessor.nil?
+  end
+
+  def get_vertex_predecessor(v)
+    get_graph_vertex(v).predecessor
+  end
+  
+  private
+  def get_graph_vertex(v)
+    @adj_matrix.find { |vertex| vertex[0] == v }[0]
   end
 end
 
