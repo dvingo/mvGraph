@@ -58,6 +58,8 @@ class Graph
     return_goal_state = nil
     while queue.length != 0 and goal_not_reached
       current_vertex = queue.dequeue
+      puts "current_vertex: #{current_vertex}"
+      puts "current_vertex.score: #{current_vertex.score}"
       count += 1
       # Full BFS or DFS with no goal state
       if neighbor_function.nil? and search_depth.nil? and goal_state.nil?
@@ -77,11 +79,11 @@ class Graph
 	  unless self.include? neighbor
 	    self.add_vertex(neighbor)
 	    self.add_edge(current_vertex, neighbor)
-	    
 	    if neighbor == goal_state
               set_vertex_color(get_graph_vertex(neighbor), "gray")
 	      set_vertex_distance(get_graph_vertex(neighbor), get_vertex_distance(get_graph_vertex(current_vertex)) + 1)
 	      set_vertex_predecessor(get_graph_vertex(neighbor), get_graph_vertex(current_vertex))
+puts "	   a;dslfkj   #{return_goal_state} "
 	      return_goal_state = neighbor
 	      goal_not_reached = false
 	      break
@@ -97,8 +99,6 @@ class Graph
 	end
       # Random walk to a given distance and no goal state
       elsif !neighbor_function.nil? and goal_state.nil? and !search_depth.nil?
-	puts "get_graph_vertex(current_vertex) #{get_graph_vertex(current_vertex)}"
-	puts "neighbor_func: #{neighbor_function}"
 	neighbors = get_graph_vertex(current_vertex).send(neighbor_function)
 	neighbors.each do |neighbor|
 	  unless self.include? neighbor
@@ -122,12 +122,12 @@ class Graph
 	# Other possible prototypes
       end	
     end
+puts "return_goal_state: #{return_goal_state}"
     return return_goal_state, count
   end
 
   # Performs depth-first search to the given depth, starting at the vertex start_state.
   def walk_n_steps(start_state, neighbor_function, depth)
-    puts "start_state: #{start_state}"
     search(start_state, "lifo", neighbor_function, nil, depth)
   end
  

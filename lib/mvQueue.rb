@@ -1,8 +1,13 @@
 class Queue < Array
   def initialize(type)
-    #super()
+    super()
     @type = type
-    @func_map = {"fi" => Proc.new{ |item| self.insert(0, item) }, "li" => Proc.new{ |item| self << item }, "fo" => Proc.new{ self.pop }, "lo" => Proc.new{ }}
+    @func_map = {"fi" => Proc.new{ |item| self.insert(0, item) }, "li" => Proc.new{ |item| self << item }, "fo" => Proc.new{ self.pop }, "lo" => Proc.new{ delete_at(0) }, 
+"be" => Proc.new do |item|
+   self.insert(0, item)
+   self.sort_by! { |state| state.score }
+ end
+ }
   end
   
   def enqueue(item)
