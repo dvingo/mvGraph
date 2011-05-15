@@ -1,0 +1,4 @@
+mvGraph is an implementation of the graph data structure in Ruby.  It was created to solve 
+some classic AI search problems; as such, it currently supports BFS, DFS, any user-defined heuristic search, as well as A*.
+
+## TODO - how to install as a gem

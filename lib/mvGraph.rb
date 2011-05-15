@@ -26,12 +26,12 @@ class Graph
   def add_edge(v1, v2)
     if @adj_matrix[v1].nil?
       @adj_matrix[v1] = Hash.new
-      @adj_matrix[v1][v2] = 1
     end
     if @adj_matrix[v2].nil?
       @adj_matrix[v2] = Hash.new
-      @adj_matrix[v2][v1] = 1
     end
+      @adj_matrix[v2][v1] = 1
+      @adj_matrix[v1][v2] = 1
   end
 
   def update_vertex(v)
@@ -58,8 +58,6 @@ class Graph
     return_goal_state = nil
     while queue.length != 0 and goal_not_reached
       current_vertex = queue.dequeue
-      puts "current_vertex: #{current_vertex}"
-      puts "current_vertex.score: #{current_vertex.score}"
       count += 1
       # Full BFS or DFS with no goal state
       if neighbor_function.nil? and search_depth.nil? and goal_state.nil?

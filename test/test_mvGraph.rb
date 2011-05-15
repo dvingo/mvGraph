@@ -56,7 +56,7 @@ class TestGraph < MiniTest::Unit::TestCase
   def test_loop
     @graph.add_vertex(Vertex.new(1))
     @graph.add_edge(Vertex.new(1),Vertex.new(1))
-    assert @graph.has_edge?(Vertex.new(1),Vertex.new(1))
+    assert @graph.has_edge?(Vertex.new(1),Vertex.new(1)), "@graph should have the edge just added."
   end
   
   def test_vertex_equal
@@ -169,15 +169,15 @@ class TestGraph < MiniTest::Unit::TestCase
     assert_equal "5", @graph.vertex(Vertex.new(1)).predecessor
   end
   
-  def test_dfs
-    bfs_setup_hard
-    assert @bfs_graph
-    @bfs_graph.search(Vertex.new(1), "lifo")
-    assert_equal "black", @bfs_graph.vertex(Vertex.new(1)).color
-    assert_equal 0, @bfs_graph.vertex(Vertex.new(1)).distance
-    assert_equal nil, @bfs_graph.vertex(Vertex.new(1)).predecessor
-    assert_equal @bfs_graph.vertex(Vertex.new(11)).color, "black"
-    assert @bfs_graph.vertex(Vertex.new(11)).distance == 5
-    assert @bfs_graph.vertex(Vertex.new(11)).predecessor == Vertex.new(9)
-  end
+  #def test_dfs
+  #  bfs_setup_hard
+  #  assert @bfs_graph
+  #  @bfs_graph.search(Vertex.new(1), "lifo")
+  #  assert_equal "black", @bfs_graph.vertex(Vertex.new(1)).color
+  #  assert_equal 0, @bfs_graph.vertex(Vertex.new(1)).distance
+  #  assert_equal nil, @bfs_graph.vertex(Vertex.new(1)).predecessor
+  #  assert_equal @bfs_graph.vertex(Vertex.new(11)).color, "black"
+  #  assert @bfs_graph.vertex(Vertex.new(11)).distance == 5
+  #  assert @bfs_graph.vertex(Vertex.new(11)).predecessor == Vertex.new(9)
+  #end
 end
