@@ -1,2 +1,5 @@
 mvGraph is an implementation of the graph data structure in Ruby.  It was created to solve 
 some classic AI search problems; as such, it currently supports BFS, DFS, any user-defined heuristic search, as well as A*.
+
+To install use 'gem install mvgraph'
+and then require 'mvGraph' in your Ruby code.
